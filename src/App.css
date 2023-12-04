@@ -1,81 +1,89 @@
+/* Couleurs et Polices */
+body {
+  box-sizing: border-box;
+  color: #4a4a4a;
+  font-family: 'Arial', sans-serif;
+  background-color: #eaeaea;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .App {
-  text-align: center;
-}
-
-.Center {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: left;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
+  background-color: white;
+  padding: 50px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-body {
+  padding: 20px;
   box-sizing: border-box;
-  color: #220f5f;
-  font-family:  sans-serif;
 }
 
-.container {
-  width: 100%;
-  max-width: 800px;
-  padding: 0 10px;
-  margin: 0 auto;
-  margin-top: 70px;
+.flag-image {
+  max-width: 80%; /* ou une taille spécifique */
+  margin-bottom: 20px; /* espace entre l'image et la barre de réponse */
 }
 
-.title {
-  text-align: center;
-  font-size: 26px;
-  margin-bottom: 30px;
+/* Styles pour les liens de navigation */
+.App-link {
+  color: #e5cb9a;
+  text-decoration: none;
 }
 
-table {
-  border-collapse: collapse;
+.App-link:hover {
+  text-decoration: underline;
 }
 
-tr th {
-  font-size: 18px;
-  padding: 12px;
-  border: 1px solid #eeeeee;
-  text-align: left;
-  background-color: rgba(217, 221, 146, 0.2);
+button {
+  margin-top: 10px; /* espace entre les boutons */
 }
 
-tr td {
-  border: 1px solid #eeeeee;
-  text-align: left;
-  padding:  10px;
-}
-
-input {
-  font-size: 16px;
-  background-color: transparent;
+/* Styles pour les boutons */
+button, input[type="submit"], input[type="button"] {
+  background-color: #e1b74c;
+  color: white;
   border: none;
-  width: 91%;
-  padding: 12px 12px;
-  font-family:  sans-serif;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 10px;
 }
 
-input:focus {
-  outline: 1px solid #ccc;
-  border: 1px solid #ccc;
+.button-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* pour s'adapter à la largeur du conteneur */
+}
+
+button:last-child, input[type="submit"]:last-child, input[type="button"]:last-child {
+  margin-right: 0;
+}
+
+button:hover, input[type="submit"]:hover, input[type="button"]:hover {
+  background-color: #e69500;
+}
+
+.input-response {
+  margin-bottom: 20px; /* espace entre la barre de réponse et les boutons */
+}
+
+/* Plus d'ajustements pour les petits écrans */
+@media (max-width: 768px) {
+  .App {
+    padding: 20px; /* Réduire le padding sur les petits écrans */
+  }
+
+  button, input[type="submit"], input[type="button"] {
+    margin-right: 5px;
+  }
 }

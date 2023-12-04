@@ -9,20 +9,27 @@ function Problem(props) {
   const [correctCountry, setCorrectCountry] = useState('');
 
   // Fetch a new flag when the component mounts or the user requests the next flag
-  const fetchFlag = async () => {
+  const fetchCountryAndFlag = async () => {
     try {
-      // Replace 'COUNTRY_CODE' with the API's method of selecting a random country
-      const response = await axios.get('https://flagsapi.com/random/flat/64.png');
-      setCurrentFlag(response.data.flagUrl); // Set the flag image URL
-      setCorrectCountry(response.data.countryName); // Set the correct country name
+      // Obtenir une liste de tous les pays avec leur drapeau
+      const countriesResponse = await axios.get('https://restcountries.com/v2/all?fields=name,flags');
+      const countries = countriesResponse.data;
+  
+      // Sélectionner un pays aléatoire de la liste
+      const randomCountry = countries[Math.floor(Math.random() * countries.length)];
+  
+      // Mettre à jour les states avec le pays et l'URL du drapeau
+      setCurrentFlag(randomCountry.flags.png); // Utiliser 'flags.png' ou 'flags.svg' selon l'API
+      setCorrectCountry(randomCountry.name);
     } catch (error) {
-      setMessage("There was an error fetching the flag.");
-      console.error('Error fetching the flag:', error);
+      setMessage("There was an error fetching the country and flag.");
+      console.error('Error fetching the country and flag:', error);
     }
   };
+  
 
   useEffect(() => {
-    fetchFlag();
+    fetchCountryAndFlag();
   }, []);
 
   const onChangeAttempt = (e) => {
@@ -41,7 +48,7 @@ function Problem(props) {
 
   const handleNext = (e) => {
     e.preventDefault();
-    fetchFlag(); // Fetch a new flag
+    fetchCountryAndFlag(); // Fetch a new flag
     setAttempt(''); // Clear the input field
     setMessage(''); // Clear the message
   };
