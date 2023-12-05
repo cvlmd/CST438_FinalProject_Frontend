@@ -10,7 +10,7 @@ function Login() {
     }
 
     const login = () => {
-        fetch('/', {
+        fetch('http://localhost:8080/login', {
             method:'POST',
             headers: {'Content-Type':'application/json' },
             body: JSON.stringify(user)
@@ -40,7 +40,7 @@ function Login() {
             <tr><td>
             <label htmlFor="password">Password</label>
             </td><td>
-            <input type="text" name="password" value={user.password} onChange={onChange} />
+            <input type="password" name="password" value={user.password} onChange={onChange} />
             </td></tr>
             </tbody>
             </table>

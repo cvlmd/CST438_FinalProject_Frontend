@@ -24,6 +24,14 @@ function App() {
   }, []);
 
 
+  
+
+
+  const addAttemptToHistory = (userGuess, correctCountry, isCorrect) => {
+    setHistory(prevHistory => [...prevHistory, { userGuess, correctCountry, isCorrect }]);
+  };
+
+
   const fetchProblem = () => {
     setMessage(''); 
     fetch('http://localhost:8080/multiplication/new')
@@ -75,8 +83,15 @@ return (
       <Switch>
         <Route exact path='/'>
           { isAuthenticated ? 
-            <Problem factors={factors} message={message} postAttempt={fetchProblem} />
-            : <Redirect to="/login" /> }
+            <Problem 
+              factors={factors} 
+              message={message} 
+              postAttempt={postAttempt} 
+              fetchProblem={fetchProblem}
+              addAttemptToHistory={addAttemptToHistory}
+            />
+            : <Redirect to="/login" />
+          }
         </Route>
         <Route path='/history'>
           { isAuthenticated ? <History data={history} /> : <Redirect to="/login" /> }
