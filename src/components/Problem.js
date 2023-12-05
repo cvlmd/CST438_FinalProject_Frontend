@@ -38,7 +38,10 @@ function Problem(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (attempt.trim().toLowerCase() === correctCountry.toLowerCase()) {
+    const isCorrect = attempt.trim().toLowerCase() === correctCountry.toLowerCase();
+    props.addAttemptToHistory(attempt, correctCountry, isCorrect);
+  
+    if (isCorrect) {
       setMessage("Correct!");
     } else {
       setMessage(`Incorrect, the correct answer was ${correctCountry}. Try another flag!`);
