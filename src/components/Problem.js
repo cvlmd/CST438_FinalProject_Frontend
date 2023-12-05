@@ -19,7 +19,7 @@ function Problem(props) {
       const randomCountry = countries[Math.floor(Math.random() * countries.length)];
   
       // Mettre à jour les states avec le pays et l'URL du drapeau
-      setCurrentFlag(randomCountry.flags.png); // Utiliser 'flags.png' ou 'flags.svg' selon l'API
+      setCurrentFlag(randomCountry.flags.png); 
       setCorrectCountry(randomCountry.name);
     } catch (error) {
       setMessage("There was an error fetching the country and flag.");

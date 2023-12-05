@@ -2,7 +2,8 @@ import './App.css';
 import React, {useState, useEffect} from 'react';
 import History from './components/History';
 import Problem from './components/Problem';
-import {BrowserRouter, Switch, Route, Link} from 'react-router-dom';
+import {BrowserRouter, Switch, Route, Link, Redirect} from 'react-router-dom';
+import Login from './components/Login'; 
 
 
 
@@ -12,10 +13,15 @@ function App() {
   const [message, setMessage] = useState('');
   const [factors, setFactors] = useState({a:41, b:26});
   const [history, setHistory] = useState([]);
-  
-  useEffect( () => {
-    fetchProblem();
-  }, [])
+  const [isAuthenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check session storage for JWT token
+    const jwtToken = sessionStorage.getItem("jwt");
+    
+    // Set authenticated state based on the presence of the token
+    setAuthenticated(jwtToken !== null);
+  }, []);
 
 
   const fetchProblem = () => {
@@ -65,21 +71,23 @@ function App() {
 return (
   <div className="App">
     <BrowserRouter>
-    <Link to='/'>Play Game</Link>{' | '}<Link to='/history'>History</Link>
-    <Switch>
-      <Route exact path='/'>
-        <Problem factors={factors} 
-                 message={message}
-                 postAttempt={postAttempt} 
-                 fetchProblem={fetchProblem} />
-      </Route>
-      <Route path='/history'>
-        <History data={history}/>
-      </Route>
-    </Switch>
+      <Link to='/'>Play Game</Link>{' | '}<Link to='/history'>History</Link>
+      <Switch>
+        <Route exact path='/'>
+          { isAuthenticated ? 
+            <Problem factors={factors} message={message} postAttempt={fetchProblem} />
+            : <Redirect to="/login" /> }
+        </Route>
+        <Route path='/history'>
+          { isAuthenticated ? <History data={history} /> : <Redirect to="/login" /> }
+        </Route>
+        <Route path='/login'>
+          <Login />
+        </Route>
+      </Switch>
     </BrowserRouter>
   </div>
-)
-
+);
 }
+
 export default App;
