@@ -2,74 +2,65 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function Problem(props) {
-  // State for the user's guess, the message to the user, and the flag details
   const [attempt, setAttempt] = useState('');
   const [message, setMessage] = useState('');
-  const [currentFlag, setCurrentFlag] = useState('');
-  const [correctCountry, setCorrectCountry] = useState('');
-
-  // Fetch a new flag when the component mounts or the user requests the next flag
-  const fetchCountryAndFlag = async () => {
-    try {
-      // Obtenir une liste de tous les pays avec leur drapeau
-      const countriesResponse = await axios.get('https://restcountries.com/v2/all?fields=name,flags');
-      const countries = countriesResponse.data;
-  
-      // Sélectionner un pays aléatoire de la liste
-      const randomCountry = countries[Math.floor(Math.random() * countries.length)];
-  
-      // Mettre à jour les states avec le pays et l'URL du drapeau
-      setCurrentFlag(randomCountry.flags.png); // Utiliser 'flags.png' ou 'flags.svg' selon l'API
-      setCorrectCountry(randomCountry.name);
-    } catch (error) {
-      setMessage("There was an error fetching the country and flag.");
-      console.error('Error fetching the country and flag:', error);
-    }
-  };
-  
+  const [currentFlag, setCurrentFlag] = useState({ url: '', country: '' });
 
   useEffect(() => {
-    fetchCountryAndFlag();
+    fetchFlag();
   }, []);
+
+  const fetchFlag = async () => {
+    console.log("Fetching flag...");
+    try {
+      const response = await axios.get('http://localhost:8080/quiz/flag');
+      console.log("Response received:", response.data);
+      setCurrentFlag({ url: response.data.flagUrl, country: response.data.name });
+    } catch (error) {
+      console.error('Error fetching flag:', error);
+    }
+  };
 
   const onChangeAttempt = (e) => {
     setAttempt(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (attempt.trim().toLowerCase() === correctCountry.toLowerCase()) {
+    if (attempt.trim().toLowerCase() === currentFlag.country.toLowerCase()) {
       setMessage("Correct!");
     } else {
-      setMessage(`Incorrect, the correct answer was ${correctCountry}. Try another flag!`);
+      setMessage(`Incorrect, the correct answer was ${currentFlag.country}.`);
     }
-    setAttempt(''); // Clear the input field
-  };
-
-  const handleNext = (e) => {
-    e.preventDefault();
-    fetchCountryAndFlag(); // Fetch a new flag
-    setAttempt(''); // Clear the input field
-    setMessage(''); // Clear the message
+    setAttempt('');
+    await fetchFlag();
   };
 
   return (
-    <div className="App">
-      <h3>Guess the country for this flag:</h3>
-      <img src={currentFlag} alt="Flag" />
-
-      <input 
-        type="text" 
-        name="attempt" 
-        value={attempt} 
-        onChange={onChangeAttempt} 
-        placeholder="Enter country name" 
-      />
-
-      <button id="submit" onClick={handleSubmit}>Submit</button>
-      <button onClick={handleNext}>Next Flag</button>
-
-      <h3 id="message">{message}</h3>
+    <div className="Problem" style={{
+      maxWidth: '600px', margin: 'auto', padding: '20px', borderRadius: '10px',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column',
+      alignItems: 'center', backgroundColor: 'white'
+    }}>
+      <h3 style={{ textAlign: 'center' }}>Guess the country of the flag:</h3>
+      <div style={{
+        width: '500px', height: '300px', display: 'flex', justifyContent: 'center',
+        alignItems: 'center', overflow: 'hidden', marginBottom: '20px', backgroundColor: '#f0f0f0',
+        border: '1px solid #ddd'
+      }}>
+        <img src={currentFlag.url} alt="Flag" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+      </div>
+      <form onSubmit={handleSubmit} style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <input 
+          type="text" 
+          value={attempt} 
+          onChange={onChangeAttempt} 
+          placeholder="Enter country name" 
+          style={{ marginBottom: '10px', padding: '10px', width: '100%', maxWidth: '500px', borderRadius: '4px', border: '1px solid #ddd' }}
+        />
+        <button type="submit" style={{ padding: '10px 20px', cursor: 'pointer', backgroundColor: '#ffc107', border: 'none', borderRadius: '5px', maxWidth: '500px' }}>Submit</button>
+      </form>
+      {message && <div style={{ textAlign: 'center', maxWidth: '500px' }}>{message}</div>}
     </div>
   );
 }
