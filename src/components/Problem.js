@@ -4,7 +4,9 @@ import axios from 'axios';
 function Problem(props) {
   const [attempt, setAttempt] = useState('');
   const [message, setMessage] = useState('');
+
   const [currentFlag, setCurrentFlag] = useState({ url: '', country: '' });
+
 
   useEffect(() => {
     fetchFlag();
@@ -27,6 +29,7 @@ function Problem(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (attempt.trim().toLowerCase() === currentFlag.country.toLowerCase()) {
       setMessage("Correct!");
     } else {
