@@ -1,30 +1,44 @@
 import './History.css';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-function History(props) {
-    const headers = ['Attempted Country', 'Correct Country', 'Correct?'];  
-    return(
-        <div> 
-            <h3>Your recent guesses</h3>        
-            <table id="history" > 
-                <thead>
-                <tr>
-                    {headers.map((header, idx) => (<th key={idx}>{header}</th>))}
-                </tr>
-                </thead>
-                <tbody>
-                {props.data.map((row, idx) => (
-                        <tr key={idx}>
-                        <td>{row.userGuess}</td>
-                        <td>{row.correctCountry}</td>
-                        {row.isCorrect ? 
-                            (<td className="correct">Correct</td>) :
-                            (<td className="incorrect">Incorrect</td>)} 
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
+function ScoreHistoryComponent() {
+  const [scoreHistory, setScoreHistory] = useState([]);
+  
+  useEffect(() => {
+    axios.get('http://localhost:8080/score/history', {
+      params: {
+        username: 'user', 
+      },
+    })
+    .then((response) => {
+      console.log('Score history data:', response.data); // Check the data received
+      setScoreHistory(response.data);
+    })
+    .catch((error) => {
+      console.error('Error fetching score history:', error);
+    });
+  }, []);
+  
+
+  // Inside the History component
+return (
+    <div className="score-history">
+      <h2>Score History</h2>
+      <ul>
+      {scoreHistory.map((scoreItem, index) => (
+
+          <li key={index}>
+            Attempt ID: {scoreItem.attemptId}<br />
+            User Guess: {scoreItem.userGuess}<br />
+            Correct Country: {scoreItem.correctCountry}<br />
+            Is Correct: {scoreItem.isCorrect ? 'Yes' : 'No'}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+  
 }
-export default History;
+
+export default ScoreHistoryComponent;
